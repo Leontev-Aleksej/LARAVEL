@@ -18,9 +18,14 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
+        'middle_name',
+        'school',
+        'grade',
         'email',
         'password',
+        'is_admin',
     ];
 
     /**
@@ -33,6 +38,10 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function work()
+    {
+        return $this->hasOne(Work::class);
+    }
     /**
      * The attributes that should be cast.
      *

@@ -1,24 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class RegisteredUserController extends Controller
+class AuthController extends Controller
 {
-    public function create()
+    public function showRegister()
     {
         return view('auth.register');
     }
 
-    public function store(RegisterRequest $request)
+    public function register(RegisterRequest $request)
     {
         $user = User::create([
             'first_name' => $request->first_name,
@@ -34,5 +33,25 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         return redirect()->route('contest')->with('success', 'Регистрация успешна!');
+    }
+
+    public function showLogin()
+    {
+        return view('auth.login');
+    }
+
+    public function login(LoginRequest $request)
+    {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            return redirect()->route('contest');
+        }
+
+        return back()->withErrors(['email' => 'Неверный email или пароль']);
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('home');
     }
 }
